@@ -6,3 +6,4 @@ dspy-ai>=2.0.0
 faiss-cpu>=1.7.3  # or faiss-gpu if you have CUDA
 openai>=0.27.0
 python-multipart>=0.0.5
+gunicorn
