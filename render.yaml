@@ -41,20 +41,6 @@ services:
 # Secrets (these will be encrypted)
 # You'll need to add these in the Render dashboard
 # or via the CLI before deploying
-secrets:
-  - name: groq-api-key
-    description: API key for Groq service
-  - name: gemini-api-key
-    description: API key for Google Gemini service
-
-# Environment groups (optional)
-environmentGroups:
-  - name: production
-    services:
-      - knowledge-api
-    envVars:
-      - key: ENVIRONMENT
-        value: production
 
 # Database (uncomment and configure if needed)
 # databases:
