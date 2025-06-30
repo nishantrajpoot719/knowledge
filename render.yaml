@@ -1,9 +1,5 @@
-# Render Blueprint for Knowledge API
-# Reference: https://render.com/docs/blueprint-spec
 
-# Global settings
 services:
-  # Main API service
   - type: web
     name: knowledge-api
     env: python
@@ -15,45 +11,13 @@ services:
       - key: PYTHON_VERSION
         value: 3.9.16
       - key: GROQ_API_KEY
-        fromService:
-          type: secret
-          name: groq-api-key
+        sync: False
       - key: GEMINI_API_KEY
-        fromService:
-          type: secret
-          name: gemini-api-key
+        sync: False
       - key: DEBUG_MODE
         value: "false"
       - key: VERBOSE_LOGGING
         value: "false"
       - key: PORT
         value: 10000
-    healthCheckPath: /
-    autoDeploy: true  # Enable auto-deploy on git push
-    numInstances: 1
     
-    # Resource allocation (for paid plans)
-    # resources:
-    #   cpu: 1
-    #   memoryGB: 1
-    #   ephemeralStorageGB: 1
-
-# Secrets (these will be encrypted)
-# You'll need to add these in the Render dashboard
-# or via the CLI before deploying
-
-# Database (uncomment and configure if needed)
-# databases:
-#   - name: knowledge-db
-#     databaseName: knowledge
-#     user: knowledge_user
-#     plan: free  # or 'starter', 'standard', 'plus' for production
-
-# Custom domains (configure in the dashboard after deployment)
-# customDomains:
-#   - name: api.yourdomain.com
-#     domainType: apex
-#     redirects:
-#       - from: www.api.yourdomain.com
-#         to: api.yourdomain.com
-#         type: permanent
