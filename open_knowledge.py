@@ -47,116 +47,116 @@ except ValueError as e:
     logger.error(f"Failed to initialize DSPy: {e}")
     raise
 
-@tool
-def embed_text(text: str) -> np.ndarray:
-    """Generate embeddings for the given text using Gemini API."""
-    try:
-        if not text or not isinstance(text, str):
-            raise ValueError("Text must be a non-empty string")
+# @tool
+# def embed_text(text: str) -> np.ndarray:
+#     """Generate embeddings for the given text using Gemini API."""
+#     try:
+#         if not text or not isinstance(text, str):
+#             raise ValueError("Text must be a non-empty string")
             
-        embedder = GeminiEmbedder(api_key=GEMINI_API_KEY)
-        return embedder.get_embedding(text)
-    except Exception as e:
-        logger.error(f"Error generating embeddings: {str(e)}")
-        raise
+#         embedder = GeminiEmbedder(api_key=GEMINI_API_KEY)
+#         return embedder.get_embedding(text)
+#     except Exception as e:
+#         logger.error(f"Error generating embeddings: {str(e)}")
+#         raise
 
-def loading_knowledge() -> List[Dict[str, str]]:
-    """Load and parse the FAQ markdown file.
+# def loading_knowledge() -> List[Dict[str, str]]:
+#     """Load and parse the FAQ markdown file.
     
-    Returns:
-        List of dictionaries containing 'title' and 'content' for each FAQ entry.
-    """
-    try:
-        # Use pathlib for better path handling
-        faq_path = Path(__file__).parent / "faq.md"
+#     Returns:
+#         List of dictionaries containing 'title' and 'content' for each FAQ entry.
+#     """
+#     try:
+#         # Use pathlib for better path handling
+#         faq_path = Path(__file__).parent / "faq.md"
         
-        # Check if file exists
-        if not faq_path.exists():
-            error_msg = f"FAQ file not found at {faq_path}"
-            logger.error(error_msg)
-            raise FileNotFoundError(error_msg)
+#         # Check if file exists
+#         if not faq_path.exists():
+#             error_msg = f"FAQ file not found at {faq_path}"
+#             logger.error(error_msg)
+#             raise FileNotFoundError(error_msg)
             
-        # Check file size (e.g., 5MB limit)
-        if faq_path.stat().st_size > 5 * 1024 * 1024:
-            error_msg = "FAQ file is too large (max 5MB)"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+#         # Check file size (e.g., 5MB limit)
+#         if faq_path.stat().st_size > 5 * 1024 * 1024:
+#             error_msg = "FAQ file is too large (max 5MB)"
+#             logger.error(error_msg)
+#             raise ValueError(error_msg)
             
-        with open(faq_path, "r", encoding="utf-8") as f:
-            faq_text = f.read()
+#         with open(faq_path, "r", encoding="utf-8") as f:
+#             faq_text = f.read()
             
-        if not faq_text.strip():
-            logger.warning("FAQ file is empty")
-            return []
+#         if not faq_text.strip():
+#             logger.warning("FAQ file is empty")
+#             return []
             
-        sections = re.split(r'(?m)^##\s+', faq_text)[1:]
-        faq_entries = []
+#         sections = re.split(r'(?m)^##\s+', faq_text)[1:]
+#         faq_entries = []
         
-        for section in sections:
-            try:
-                if '\n' in section:
-                    title, content = section.split('\n', 1)
-                    faq_entries.append({
-                        "title": title.strip(),
-                        "content": content.strip()
-                    })
-            except Exception as e:
-                logger.warning(f"Error parsing FAQ section: {str(e)}")
-                continue
+#         for section in sections:
+#             try:
+#                 if '\n' in section:
+#                     title, content = section.split('\n', 1)
+#                     faq_entries.append({
+#                         "title": title.strip(),
+#                         "content": content.strip()
+#                     })
+#             except Exception as e:
+#                 logger.warning(f"Error parsing FAQ section: {str(e)}")
+#                 continue
                 
-        if not faq_entries:
-            logger.warning("No valid FAQ entries found in the file")
+#         if not faq_entries:
+#             logger.warning("No valid FAQ entries found in the file")
             
-        return faq_entries
+#         return faq_entries
 
-    except Exception as e:
-        logger.error(f"Error loading FAQs: {str(e)}")
-        raise
+#     except Exception as e:
+#         logger.error(f"Error loading FAQs: {str(e)}")
+#         raise
 
-def knowledge_embeddings() -> list:
-    """Generate embeddings for all FAQ entries.
+# def knowledge_embeddings() -> list:
+#     """Generate embeddings for all FAQ entries.
     
-    Returns:
-        List of embeddings for each FAQ entry.
-    """
-    try:
-        faqs = loading_knowledge()
-        if not faqs:
-            logger.warning("No FAQs to embed")
-            return []
+#     Returns:
+#         List of embeddings for each FAQ entry.
+#     """
+#     try:
+#         faqs = loading_knowledge()
+#         if not faqs:
+#             logger.warning("No FAQs to embed")
+#             return []
             
-        faq_embeddings = []
-        for entry in faqs:
-            try:
-                text = f"{entry.get('title', '')} {entry.get('content', '')}".strip()
-                if text:
-                    embedding = embed_text(text)
-                    faq_embeddings.append(embedding)
-            except Exception as e:
-                logger.error(f"Failed to generate embedding for FAQ entry: {str(e)}")
-                continue
+#         faq_embeddings = []
+#         for entry in faqs:
+#             try:
+#                 text = f"{entry.get('title', '')} {entry.get('content', '')}".strip()
+#                 if text:
+#                     embedding = embed_text(text)
+#                     faq_embeddings.append(embedding)
+#             except Exception as e:
+#                 logger.error(f"Failed to generate embedding for FAQ entry: {str(e)}")
+#                 continue
                 
-        if not faq_embeddings:
-            logger.error("No valid embeddings generated")
-            return []
+#         if not faq_embeddings:
+#             logger.error("No valid embeddings generated")
+#             return []
             
-        return faq_embeddings
+#         return faq_embeddings
 
-    except Exception as e:
-        logger.error(f"Error in knowledge_embeddings: {str(e)}")
-        raise
+#     except Exception as e:
+#         logger.error(f"Error in knowledge_embeddings: {str(e)}")
+#         raise
 
-# Initialize knowledge base when the module is imported
-try:
-    knowledge_base = knowledge_embeddings()
-except Exception as e:
-    logger.critical(f"Failed to initialize knowledge base: {str(e)}")
-    knowledge_base = []
+# # Initialize knowledge base when the module is imported
+# try:
+#     knowledge_base = knowledge_embeddings()
+# except Exception as e:
+#     logger.critical(f"Failed to initialize knowledge base: {str(e)}")
+#     knowledge_base = []
 
 class KnowledgeSummarySignature(dspy.Signature):
     """You have to summarize the final answer of the tool"""
     user_query : str = dspy.InputField(desc="user's query")
-    retrieved_knowledge : str = dspy.InputField(desc="retrieved knowledge from the knowledge base")
+    retrieved_knowledge : str = dspy.InputField(desc="retrieved relevant knowledge from the knowledge base")
     answer : str = dspy.OutputField(desc="summarized answer")
 
 class KnowledgeSummarizer(dspy.Module):
@@ -193,7 +193,7 @@ class Knowledge_Agent:
             self.agent = Agent(
                 name="Knowledge Agent",
                 role=("Handles user's request in case of general enquiry about the company, "
-                     "their products, or any other general FAQ related queries"),
+                     "their products, or any other general FAQs related queries"),
                 model=self.llm,
                 # knowledge = self.knowledge_base,
                 # search_knowledge = True,
@@ -201,7 +201,7 @@ class Knowledge_Agent:
                 # show_tool_calls = True,
                 instructions=[
                     FAQs_system_prompt,
-                    "To answer any FAQ related query refer to the instruction given in the FAQs_system_prompt"
+                    "To answer any Knowledge related query refer to the instruction given in the FAQs_system_prompt. There is no need to generate a response on your own without confirming from the knowledge. If you doesn't find relevant information just humbly reply the reason, but no need to generate wrong information"
                 ],
                 markdown=True,
                 debug_mode=os.getenv("DEBUG_MODE", "false").lower() == "true"
@@ -213,22 +213,22 @@ class Knowledge_Agent:
             logger.error(f"Failed to initialize Knowledge_Agent: {str(e)}")
             raise
 
-    def process_user_query(self, user_query: List[dict]):
+    def process_user_query(self, user_query: str):
         """Process user query using agent to provide the most relevant answer.
         
         Args:
-            user_query: List of message dictionaries containing user queries.
+            user_query: summary of the user queries, and what information user wants to know.
             
         Returns:
             The agent's response to the query in json format [{"role": "user", "content": f"{user_query}",{"role": "assistant", "content": f"{response}"}].
         """
-        if not user_query or not isinstance(user_query, list):
+        if not user_query or not isinstance(user_query, str):
             error_msg = "Invalid input: user_query must be a non-empty list of message dictionaries"
             logger.error(error_msg)
             return "Invalid input format. Please provide a valid query."
             
         try:
-            logger.info(f"Processing query: {str(user_query)[:200]}...")  # Log first 200 chars
+            logger.info("Processing query: ...") 
             
             response = self.agent.run(
                 message=user_query,
