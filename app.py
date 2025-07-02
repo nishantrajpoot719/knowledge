@@ -15,10 +15,10 @@ knowledge_agent = Knowledge_Agent()
 def home():
     return "Knowledge API is running!"
 
-@app.route('/query', methods=['POST'])
+@app.route('/query', methods=['POST', 'GET'])
 def process_query():
     try:
-        data = request.get_json()
+        data = request.get()
         user_query = data.get('query', '')
         
         if not user_query:
